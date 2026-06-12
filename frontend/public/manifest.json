@@ -1,0 +1,10 @@
+{
+  "name": "CuisineEnsemble",
+  "short_name": "Cuisine",
+  "description": "Repas partagés entre voisins",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#198754",
+  "icons": []
+}

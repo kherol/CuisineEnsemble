@@ -1,0 +1,23 @@
+- name: Deploy CuisineEnsemble
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - docker.io
+          - docker-compose-plugin
+          - git
+        state: present
+        update_cache: yes
+
+    - name: Clone project repository
+      git:
+        repo: "https://github.com/TON-UTILISATEUR/CuisineEnsemble.git"
+        dest: /opt/cuisineensemble
+        version: main
+
+    - name: Start Docker Compose services
+      command: docker compose up -d --build
+      args:
+        chdir: /opt/cuisineensemble
