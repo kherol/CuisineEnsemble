@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CuisineEnsemble — Repas partagés
 
 CuisineEnsemble est une application web qui facilite l'organisation de repas communautaires entre habitants d'un même quartier. Le projet vise à réduire l'isolement alimentaire, favoriser la découverte culinaire et partager les coûts des repas.
@@ -127,3 +128,7 @@ CuisineEnsemble/
 
 Au démarrage, l'API crée automatiquement les tables. Tu peux créer tes comptes depuis l'interface ou Swagger.
 Pour créer un administrateur, modifie directement le rôle en base ou utilise la route admin après avoir configuré ton premier utilisateur.
+=======
+# CuisineEnsemble
+Une plateforme qui permet à une personne de proposer un repas chez elle ou dans un lieu communautaire, avec un nombre de places disponibles, un prix par personne, des informations sur les allergies/régimes, et un système d’inscription pour les participants. 
+>>>>>>> aa272539380527184b1cb54f931d4e75e79b17c9
