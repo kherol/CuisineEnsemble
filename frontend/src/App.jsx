@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AppNavbar from './components/AppNavbar.jsx'
 import Home from './pages/Home.jsx'
+import About from './pages/About.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Dashboard from './pages/Dashboard.jsx'
@@ -15,16 +16,17 @@ import AdminDashboard from './pages/AdminDashboard.jsx'
 import { getToken } from './api.js'
 
 function Protected({ children }) {
-  return getToken() ? children : <Navigate to="/connexion" />
+  return getToken() ? children : <Navigate to="/connexion" replace />
 }
 
 export default function App() {
   return (
     <>
       <AppNavbar />
-      <main className="container py-4">
+      <main className="page-shell">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/a-propos" element={<About />} />
           <Route path="/connexion" element={<Login />} />
           <Route path="/inscription" element={<Register />} />
           <Route path="/repas" element={<MealsList />} />
@@ -36,6 +38,7 @@ export default function App() {
           <Route path="/chat/:mealId" element={<Protected><Chat /></Protected>} />
           <Route path="/profil" element={<Protected><Profile /></Protected>} />
           <Route path="/admin" element={<Protected><AdminDashboard /></Protected>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </>

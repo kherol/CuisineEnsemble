@@ -1,16 +1,163 @@
 :root {
   --ce-green: #198754;
+  --ce-green-dark: #146c43;
   --ce-warm: #fff8ef;
+  --ce-cream: #fffdf8;
+  --ce-text: #222222;
 }
 
 body {
   background: #fafafa;
+  color: var(--ce-text);
 }
 
-.hero {
+.page-shell {
+  min-height: calc(100vh - 70px);
+}
+
+.brand-logo {
+  color: var(--ce-green) !important;
+  letter-spacing: -0.03em;
+}
+
+.brand-icon {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #e8f5ee;
+  margin-right: 6px;
+}
+
+.shadow-sm-sm {
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.03);
+}
+
+.hero-section {
+  background: linear-gradient(135deg, var(--ce-warm), #ffffff 60%, #edf8f1);
+  padding: 72px 0;
+}
+
+.hero-card {
+  max-width: 390px;
+  border-radius: 28px;
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1.5rem 3rem rgba(25, 135, 84, 0.16);
+  border: 1px solid rgba(25, 135, 84, 0.08);
+}
+
+.hero-food {
+  font-size: 4.5rem;
+  line-height: 1;
+  margin-bottom: 18px;
+}
+
+.badge-soft {
+  background: #e8f5ee;
+  color: var(--ce-green-dark);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: #f1f7f4;
+  color: var(--ce-green-dark);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.feature-card,
+.about-card {
+  border: 0;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.05);
+}
+
+.feature-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.08);
+}
+
+.feature-icon,
+.about-icon {
+  font-size: 2.4rem;
+}
+
+.impact-box,
+.cta-box {
+  border-radius: 28px;
+  background: var(--ce-cream);
+  border: 1px solid #f0eadf;
+}
+
+.check-item {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-weight: 600;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.04);
+}
+
+.about-card {
+  height: 100%;
+  padding: 28px;
+}
+
+.auth-page {
+  min-height: calc(100vh - 90px);
+}
+
+.auth-card {
+  border-radius: 26px;
+}
+
+.auth-intro {
   background: linear-gradient(135deg, var(--ce-warm), #ffffff);
-  border-radius: 24px;
-  padding: 56px 32px;
+  border-radius: 28px;
+  padding: 38px;
+  border: 1px solid #f0eadf;
+}
+
+.form-control,
+.btn {
+  border-radius: 14px;
+}
+
+.choice-chip {
+  border: 1px solid #dce8e1;
+  background: #ffffff;
+  color: #34443a;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.choice-chip:hover {
+  border-color: var(--ce-green);
+  color: var(--ce-green-dark);
+}
+
+.choice-chip.active {
+  background: #e8f5ee;
+  border-color: var(--ce-green);
+  color: var(--ce-green-dark);
+}
+
+.choice-chip.active.danger {
+  background: #fff1f0;
+  border-color: #dc3545;
+  color: #b02a37;
 }
 
 .card-meal {
@@ -22,11 +169,6 @@ body {
   box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.08);
 }
 
-.badge-soft {
-  background: #e8f5ee;
-  color: #146c43;
-}
-
 .chat-box {
   max-height: 420px;
   overflow-y: auto;
@@ -34,4 +176,15 @@ body {
   border: 1px solid #eee;
   border-radius: 12px;
   padding: 16px;
+}
+
+@media (max-width: 767px) {
+  .hero-section {
+    padding: 44px 0;
+  }
+
+  .hero-card,
+  .auth-intro {
+    padding: 24px;
+  }
 }
