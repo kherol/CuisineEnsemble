@@ -1,4 +1,9 @@
-const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+const envBase = import.meta.env.VITE_API_BASE || import.meta.env.VITE_API_URL
+
+const API_BASE =
+  window.location.port === '5173' && (!envBase || envBase === '/api')
+    ? 'http://localhost:8000/api'
+    : (envBase || '/api')
 
 export function getToken() {
   return localStorage.getItem('token')
@@ -6,10 +11,16 @@ export function getToken() {
 
 export function setToken(token) {
   localStorage.setItem('token', token)
+  window.dispatchEvent(new Event('auth-changed'))
 }
 
 export function logout() {
   localStorage.removeItem('token')
+  window.dispatchEvent(new Event('auth-changed'))
+}
+
+export function isAuthenticated() {
+  return Boolean(getToken())
 }
 
 export async function apiFetch(path, options = {}) {
@@ -29,11 +40,15 @@ export async function apiFetch(path, options = {}) {
   })
 
   if (!response.ok) {
-    let detail = 'Erreur API'
+    let detail = `Erreur API ${response.status}`
     try {
       const data = await response.json()
-      detail = data.detail || detail
-    } catch (_) {}
+      detail = data.detail || JSON.stringify(data)
+    } catch (_) {
+      try {
+        detail = await response.text()
+      } catch (_) {}
+    }
     throw new Error(detail)
   }
 

@@ -1,35 +1,133 @@
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../api.js'
 
+const dietaryOptions = ['Végétarien', 'Halal', 'Sans porc', 'Sans gluten', 'Sans lactose']
+const allergyOptions = ['Arachides / fruits à coque', 'Poisson / crustacés', 'Gluten', 'Lactose', 'Œufs']
+
 export default function Profile() {
   const [form, setForm] = useState(null)
+  const [selectedDiets, setSelectedDiets] = useState([])
+  const [selectedAllergies, setSelectedAllergies] = useState([])
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
-  useEffect(() => { apiFetch('/auth/me').then(setForm).catch(err => setError(err.message)) }, [])
-  if (!form) return <p>Chargement...</p>
-  function update(field, value) { setForm({ ...form, [field]: value }) }
-  async function submit(e) {
-    e.preventDefault(); setMessage(''); setError('')
-    try {
-      setForm(await apiFetch('/auth/me', { method: 'PATCH', body: JSON.stringify(form) }))
-      setMessage('Profil mis à jour')
-    } catch (err) { setError(err.message) }
+  useEffect(() => {
+    async function load() {
+      try {
+        const user = await apiFetch('/auth/me')
+        setForm(user)
+        setSelectedDiets(splitValues(user.dietary_preferences))
+        setSelectedAllergies(splitValues(user.allergies))
+      } catch (err) {
+        setError(err.message)
+      }
+    }
+    load()
+  }, [])
+
+  function update(field, value) {
+    setForm({ ...form, [field]: value })
   }
+
+  function toggle(item, list, setList) {
+    setList(list.includes(item) ? list.filter((value) => value !== item) : [...list, item])
+  }
+
+  async function submit(e) {
+    e.preventDefault()
+    setMessage('')
+    setError('')
+    try {
+      const updated = await apiFetch('/auth/me', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          name: form.name,
+          district: form.district,
+          dietary_preferences: selectedDiets.join(', '),
+          allergies: selectedAllergies.join(', '),
+        }),
+      })
+      setForm(updated)
+      setMessage('Profil mis à jour avec succès.')
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
+  if (error && !form) {
+    return <div className="container py-4"><div className="alert alert-danger">{error}</div></div>
+  }
+
+  if (!form) {
+    return <div className="container py-4"><p>Chargement du profil...</p></div>
+  }
+
   return (
-    <div className="row justify-content-center"><div className="col-lg-7">
-      <div className="card"><div className="card-body">
-        <h1 className="h3 mb-3">Mon profil</h1>
-        {message && <div className="alert alert-success">{message}</div>}
-        {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={submit}>
-          <input className="form-control mb-3" value={form.name || ''} onChange={e => update('name', e.target.value)} />
-          <input className="form-control mb-3" value={form.district || ''} onChange={e => update('district', e.target.value)} placeholder="Quartier" />
-          <input className="form-control mb-3" value={form.dietary_preferences || ''} onChange={e => update('dietary_preferences', e.target.value)} placeholder="Préférences alimentaires" />
-          <input className="form-control mb-3" value={form.allergies || ''} onChange={e => update('allergies', e.target.value)} placeholder="Allergies" />
-          <button className="btn btn-success">Enregistrer</button>
-        </form>
-      </div></div>
-    </div></div>
+    <div className="container py-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <div className="card border-0 shadow-sm auth-card">
+            <div className="card-body p-4 p-lg-5">
+              <span className="badge rounded-pill badge-soft mb-3">Profil utilisateur</span>
+              <h1 className="fw-bold mb-2">Mon profil</h1>
+              <p className="text-muted mb-4">Mets à jour tes informations, ton quartier et tes contraintes alimentaires.</p>
+
+              {message && <div className="alert alert-success">{message}</div>}
+              {error && <div className="alert alert-danger">{error}</div>}
+
+              <form onSubmit={submit}>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label className="form-label">Nom</label>
+                    <input className="form-control" value={form.name || ''} onChange={(e) => update('name', e.target.value)} required />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Email</label>
+                    <input className="form-control" value={form.email || ''} disabled />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Quartier / ville</label>
+                    <input className="form-control" value={form.district || ''} onChange={(e) => update('district', e.target.value)} placeholder="Ex : Orléans centre" />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Note moyenne</label>
+                    <input className="form-control" value={`${form.average_rating || 0}/5`} disabled />
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <label className="form-label fw-semibold">Régimes alimentaires</label>
+                  <div className="d-flex flex-wrap gap-2">
+                    {dietaryOptions.map((option) => (
+                      <button type="button" key={option} className={`choice-chip ${selectedDiets.includes(option) ? 'active' : ''}`} onClick={() => toggle(option, selectedDiets, setSelectedDiets)}>
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <label className="form-label fw-semibold">Allergies</label>
+                  <div className="d-flex flex-wrap gap-2">
+                    {allergyOptions.map((option) => (
+                      <button type="button" key={option} className={`choice-chip ${selectedAllergies.includes(option) ? 'active danger' : ''}`} onClick={() => toggle(option, selectedAllergies, setSelectedAllergies)}>
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button className="btn btn-success btn-lg w-100 mt-4">Enregistrer les modifications</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
+}
+
+function splitValues(value) {
+  if (!value) return []
+  return value.split(',').map((item) => item.trim()).filter(Boolean)
 }
