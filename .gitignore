@@ -36,3 +36,4 @@ arborescence.txt
 
 # Docker and logs
 *.log
+*.sql
